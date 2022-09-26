@@ -37,24 +37,33 @@ In this section, the following steps are implemented:
 1. Tune the training algorithm by adjusting the size of the training dataset. In this case, the training data is increased from 3 months to 6 months. And after this, a same process is implemented and SVM model is used. 
 
 The classification report of this tuned-up model is as below:
+
 ![](Images/Classificationreport-adj.jpg)
+
 
 Cumulative return plot that shows the actual returns vs. the strategy returns when utilising this extended training dataset:
 
+
 ![](Images/plot-adjsvm.jpg)
+
 
 
 2. Tune the trading algorithm by adjusting the SMA input features. 
 In this case, the short window is increased to 6 and the long window is decreased to 60. The training dataset will be kept the same as the original model (3 months)
 
+
 The classification report of this tuned-up model is as below:
 ![](Images/Classificationreport-newsvm.jpg)
 
+
  Cumulative return plot that shows the actual returns vs. the strategy returns when adjusting the SMA windows:
+
 
 ![](Images/plot-newsvm.jpg)
 
+
 With this adjustment, it can be seen that the prediction accuracy is improved slightly for the "-1.0" (sell signals). However, looking at the plot, "The Strategy Returns" is relatively similar to the "Actual Returns". There is no significant improvement compared to the original model.
+
 
 3. As showed above, extending the training data set (tune-up method 1) proves to considerably improve the prediction accuracy of the model for both "1.0" and "-1.0". This maybe the result of reducing the imbalance of the training dataset. Also, looking at the cummulative return plot, it can be seen that after around the 1st quarter of 2020, the "Stratefy Returns" is better than the "Actual Returns". But we also should take into account that the "Strategy Returns" is below "Actual Returns" during most of the trading period, especially from 2019 to 2020.
 
@@ -65,11 +74,15 @@ In this section, Logistic Regression (LR) model is implemented.
 2. Using the original training data as the baseline model, fit another model with the new classifier.
 
 The classification report when using this alternative classifier is as below:
+
 ![](Images/Classificationreport-lrm.jpg)
+
 
  Cumulative return plot that shows the actual returns vs. the strategy returns:
 
+
 ![](Images/plot-lrm.jpg)
+
 
 3. Compared the Logistic Regression classifier to the SVC classifier, the overal accuracy is not much different. However, the prediction accuracy for both "-1.0" and "1.0" when using Logistic Regression is much balanced, compared to the original SVC model.
 
