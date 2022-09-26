@@ -2,53 +2,16 @@
 
 ![Decorative image.](Images/14-challenge-image.png)
 
-Now, it's time to take what you've learned about machine learning and apply it to new situations. For this optional assignment, you'll create an algorithmic trading bot that learns and adapts to new data and evolving markets. Be sure to give it your all -- as the skills you hone will become powerful tools in your FinTech tool belt.
-
 ## Background
 
 In this Challenge, you’ll assume the role of a financial advisor at one of the top five financial advisory firms in the world. Your firm constantly competes with the other major firms to manage and automatically trade assets in a highly dynamic environment. In recent years, your firm has heavily profited by using computer algorithms that can buy and sell faster than human traders.
 
 The speed of these transactions gave your firm a competitive advantage early on. But, people still need to specifically program these systems, which limits their ability to adapt to new data. You’re thus planning to improve the existing algorithmic trading systems and maintain the firm’s competitive advantage in the market. To do so, you’ll enhance the existing trading signals with machine learning algorithms that can adapt to new data.
 
-## What You're Creating
 
-You’ll combine your new algorithmic trading skills with your existing skills in financial Python programming and machine learning to create an algorithmic trading bot that learns and adapts to new data and evolving markets.
+## Establish a Baseline Performance
 
-In a Jupyter notebook, you’ll do the following:
-
-* Implement an algorithmic trading strategy that uses machine learning to automate the trade decisions.
-
-* Adjust the input parameters to optimise the trading algorithm.
-
-* Train a new machine learning model and compare its performance to that of a baseline model.
-
-As part of your GitHub repository’s `README.md` file, you will also create a report that compares the performance of the machine learning models based on the trading predictions that each makes and the resulting cumulative strategy returns.
-
-## Files
-
-Download the following files to help you get started:
-
-[Unit 14 homework files](Starter_Code/Starter_Code.zip)
-
-> **Note:** The provided CSV file contains OHLCV data for an MSCI&ndash;based emerging markets ETF that [iShares](https://www.ishares.com/us/products/268704/ishares-currency-hedged-msci-emerging-markets) issued. Investments in emerging markets make up an important aspect of a well-diversified investment portfolio. This is because the included equities have potentially higher long-term returns, even though they carry more risk.
-
-## Instructions
-
-Use the starter code file to complete the steps that the instructions outline. The steps for this Challenge are divided into the following sections:
-
-* Establish a Baseline Performance
-
-* Tune the Baseline Trading Algorithm
-
-* Evaluate a New Machine Learning Classifier
-
-* Create an Evaluation Report
-
-### Establish a Baseline Performance
-
-In this section, you’ll run the provided starter code to establish a baseline performance for the trading algorithm. To do so, complete the following steps.
-
-Open the Jupyter notebook. Restart the kernel, run the provided cells that correspond with the first three steps, and then proceed to step four.
+In this section, the following steps are implemented:
 
 1. Import the OHLCV dataset into a Pandas DataFrame.
 
@@ -60,37 +23,67 @@ Open the Jupyter notebook. Restart the kernel, run the provided cells that corre
 
 5. Review the classification report associated with the `SVC` model predictions.
 
+![](Images/Classificationreport-svm.jpg)
+
 6. Create a predictions DataFrame that contains columns for “Predicted” values, “Actual Returns”, and “Strategy Returns”.
 
-7. Create a cumulative return plot that shows the actual returns vs. the strategy returns. Save a PNG image of this plot. This will serve as a baseline against which to compare the effects of tuning the trading algorithm.
+7. Create a cumulative return plot that shows the actual returns vs. the strategy returns. Save an image of this plot. This will serve as a baseline against which to compare the effects of tuning the trading algorithm.
+![](Images/plot-svm.jpg)
 
-8. Write your conclusions about the performance of the baseline trading algorithm in the `README.md` file that’s associated with your GitHub repository. Support your findings by using the PNG image that you saved in the previous step.
+8. Conclusion: this model performs especially well when predicts the "1.0" (buy signal). However, it does not predicts that well with "-1.0" (sell signal). The "Strategy Returns" line indicates a better performance than the "Actual Returns" line from the end of 2019 to the end of the period. 
 
-### Tune the Baseline Trading Algorithm
+## Tune the Baseline Trading Algorithm
 
-In this section, you’ll tune, or adjust, the model’s input features to find the parameters that result in the best trading outcomes. (You’ll choose the best by comparing the cumulative products of the strategy returns.) To do so, complete the following steps:
+1. Tune the training algorithm by adjusting the size of the training dataset. In this case, the training data is increased from 3 months to 6 months. And after this, a same process is implemented and SVM model is used. 
 
-1. Tune the training algorithm by adjusting the size of the training dataset. To do so, slice your data into different periods. Rerun the notebook with the updated parameters, and record the results in your `README.md` file. Answer the following question: What impact resulted from increasing or decreasing the training window?
+The classification report of this tuned-up model is as below:
+![](Images/Classificationreport-adj.jpg)
 
-    > **Hint** To adjust the size of the training dataset, you can use a different `DateOffset` value&mdash;for example, six months. Be aware that changing the size of the training dataset also affects the size of the testing dataset.
+Cumulative return plot that shows the actual returns vs. the strategy returns when utilising this extended training dataset:
 
-2. Tune the trading algorithm by adjusting the SMA input features. Adjust one or both of the windows for the algorithm. Rerun the notebook with the updated parameters, and record the results in your `README.md` file. Answer the following question: What impact resulted from increasing or decreasing either or both of the SMA windows?
+![](Images/plot-adjsvm.jpg)
 
-3. Choose the set of parameters that best improved the trading algorithm returns. Save a PNG image of the cumulative product of the actual returns vs. the strategy returns, and document your conclusion in your `README.md` file.
 
-### Evaluate a New Machine Learning Classifier
+2. Tune the trading algorithm by adjusting the SMA input features. 
+In this case, the short window is increased to 6 and the long window is decreased to 60. The training dataset will be kept the same as the original model (3 months)
 
-In this section, you’ll use the original parameters that the starter code provided. But, you’ll apply them to the performance of a second machine learning model. To do so, complete the following steps:
+The classification report of this tuned-up model is as below:
+![](Images/Classificationreport-newsvm.jpg)
 
-1. Import a new classifier, such as `AdaBoost`, `DecisionTreeClassifier`, or `LogisticRegression`. (For the full list of classifiers, refer to the [Supervised learning page](https://scikit-learn.org/stable/supervised_learning.html) in the scikit-learn documentation.)
+ Cumulative return plot that shows the actual returns vs. the strategy returns when adjusting the SMA windows:
+
+![](Images/plot-newsvm.jpg)
+
+With this adjustment, it can be seen that the prediction accuracy is improved slightly for the "-1.0" (sell signals). However, looking at the plot, "The Strategy Returns" is relatively similar to the "Actual Returns". There is no significant improvement compared to the original model.
+
+3. As showed above, extending the training data set (tune-up method 1) proves to considerably improve the prediction accuracy of the model for both "1.0" and "-1.0". This maybe the result of reducing the imbalance of the training dataset. Also, looking at the cummulative return plot, it can be seen that after around the 1st quarter of 2020, the "Stratefy Returns" is better than the "Actual Returns". But we also should take into account that the "Strategy Returns" is below "Actual Returns" during most of the trading period, especially from 2019 to 2020.
+
+## Evaluate a New Machine Learning Classifier
+
+In this section, Logistic Regression (LR) model is implemented.
 
 2. Using the original training data as the baseline model, fit another model with the new classifier.
 
-3. Backtest the new model to evaluate its performance. Save a PNG image of the cumulative product of the actual returns vs. the strategy returns for this updated trading algorithm, and write your conclusions in your `README.md` file. Answer the following questions: Did this new model perform better or worse than the provided baseline model? Did this new model perform better or worse than your tuned trading algorithm?
+The classification report when using this alternative classifier is as below:
+![](Images/Classificationreport-lrm.jpg)
 
-### Create an Evaluation Report
+ Cumulative return plot that shows the actual returns vs. the strategy returns:
 
-In the previous sections, you updated your `README.md` file with your conclusions. To accomplish this section, you need to add a summary evaluation report at the end of the `README.md` file. For this report, express your final conclusions and analysis. Support your findings by using the PNG images that you created.
+![](Images/plot-lrm.jpg)
+
+3. Compared the Logistic Regression classifier to the SVC classifier, the overal accuracy is not much different. However, the prediction accuracy for both "-1.0" and "1.0" when using Logistic Regression is much balanced, compared to the original SVC model.
+
+Compared with tuned-up SVC model with extended training dataset, the prediction accuracy of the LR model is slightly better.
+
+Compared with tuned-up SVC model with adjusted SMA windows, the prediction accuracy of the LR model is slightly better in general, and much better in predicting both "-1.0" and "1.0" values.
+
+## Evaluation Report
+
+With all the factors considered, it can be seen that extending the training period will improve significantly the accuracy of the SVC model for predicting both "-1.0" and "1.0" value. Adjusting the SMA windows only improve the general predicting accuracy slightly, but the imbalance between predicting accuracy for "-1.0" and "1.0" is similar. 
+
+By using LR classifier, the result is similar to extending the training dataset of the SVC model, which is improving remarkably the predicting accury for both "-1.0" and "1.0" values. The general predicting accuracy is improve slightly. 
+
+Looking at the cumulative return plots in all the models, it can be seen that the SVC model with extended training dataset has the "Strategy Returns" performing considerably better than "Actual Returns" after the 1st quater of 2020. However, "Strategy Returns" did not perform well in the previous period. In case of the LR classifier, the "Strategy Returns" outperforms the "Actual Returns" in most of the period. But it drops dramatically at the last quarter of 2021. The original SVC model and SVC model with adjusted SMA windows has a similar "Strategy Returns" to "Actual Returns".
 
 ---
 
